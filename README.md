@@ -12,6 +12,7 @@ A journey guide for Pokémon FireRed/LeafGreen on Gen1Recomp (mod API 3). It rea
   - **Post-game:** National Pokédex, Celio's network (Ruby and Sapphire), Mewtwo, and the three legendary birds.
   - **Pokédex:** the gifts from Professor Oak's aides for 10 to 50 kinds caught, and the National Pokédex at 60.
 - **Arrow on the game screen:** points the way to the current objective, at the border of the game picture, with the number of steps. It follows the real links between maps (edges, doors, caves, stairs, and the Seagallop ferry once you hold the passes), so it points at the next door or edge to take, and at the person to talk to once you are on the objective's map. It hides during battles, menus and messages. Turn it off with the **Arrow on screen** switch or the **Arrow to the objective** option.
+- **Your own goal:** pick any HM, key item, Pokédex gift or side trip in the Journey panel and press **Guide me here**; the arrow and the Next step panel follow it until you have it.
 - **No spoilers by default:** steps you have not reached yet show as a count ("5 more steps to come"). The **Show upcoming steps** switch in the Journey panel names them all; the choice is remembered.
 
 ## Compatibility

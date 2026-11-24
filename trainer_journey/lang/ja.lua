@@ -144,4 +144,9 @@ return {
   SHOW_ARROW = "画面に矢印",
   ARROW_STEPS = "%d 歩",
   ARROW_FERRY = "シーギャロップ号に乗ろう",
+  FOLLOW = "ここへ案内",
+  UNFOLLOW = "案内をやめる",
+  PINNED = "目標",
+  PINNED_LABEL = "じぶんの目標",
+  STORY_NEXT = "ストーリー：%s",
 }

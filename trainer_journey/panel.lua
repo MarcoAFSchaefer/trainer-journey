@@ -235,6 +235,11 @@ return function(env)
           pill(T("OPTIONAL"), right - pw, y + 4, C.off, C.muted)
           right = right - pw - 6
         end
+        if row.pinned then
+          local pw = font(10 * kf):getWidth(T("PINNED")) / kx + 12
+          pill(T("PINNED"), right - pw, y + 4, C.accent, C.text)
+          right = right - pw - 6
+        end
         line(row.title, 40, y + 3, row.status == "later" and C.muted or C.text, 13, right - 40)
         line(row.note or row.hint, 40, y + 21, row.status == "ready" and C.warn or C.muted, 11, 420)
         hit(10, y, 460, 38, function() state.selected[state.tab] = index end)
@@ -244,7 +249,15 @@ return function(env)
     local chosen = pick and rows[pick]
     box(10, 316, 460, 78, C.card, 6)
     if chosen then
-      line(chosen.title, 20, 322, C.text, 13, 440)
+      local room = 440
+      if chosen.canPin then
+        -- make it the goal the arrow leads to, or let it go
+        room = 300
+        button(T(chosen.pinned and "UNFOLLOW" or "FOLLOW"), 330, 320, 132, 22, chosen.pinned and C.warn or C.accent, function()
+          env.setPin(not chosen.pinned and chosen.key or nil)
+        end, 11)
+      end
+      line(chosen.title, 20, 322, C.text, 13, room)
       local used = para(chosen.hint ~= "" and chosen.hint or (chosen.note or ""), 20, 340, C.muted, 12, 440, 2)
       local extra = chosen.note or chosen.field
       if extra and chosen.hint ~= "" then line(extra, 20, 342 + used, chosen.status == "ready" and C.warn or C.accent, 11, 440) end
@@ -280,13 +293,20 @@ return function(env)
     color(C.bg); G.rectangle("fill", 0, 0, w, h)
     line(T("NEXT_LABEL"), 14, 10, C.accent, 11, 220)
     line(F("BADGES_CAUGHT", m.badges, m.caught), 240, 10, C.muted, 11, 226, "right")
-    local step = m.next
+    local step = m.pinned or m.next
     local y = 28
+    if m.pinned then
+      -- the player's own goal on top; the story's next step stays in sight
+      color(C.bg); G.rectangle("fill", 0, 0, w, 24 * ky)
+      line(T("PINNED_LABEL"), 14, 10, C.accent, 11, 220)
+      line(F("BADGES_CAUGHT", m.badges, m.caught), 240, 10, C.muted, 11, 226, "right")
+    end
     if step then
       line(step.title, 14, y, C.text, 17, 452)
       y = y + 26
       y = y + para(step.hint, 14, y, C.muted, 12, 452, 4) + 4
       if step.note then line(step.note, 14, y, C.accent, 11, 452); y = y + 16 end
+      if m.pinned and m.next then line(F("STORY_NEXT", m.next.title), 14, y, C.muted, 11, 452); y = y + 16 end
     else
       line(T("ALL_DONE"), 14, y, C.go, 17, 452)
       y = y + 26

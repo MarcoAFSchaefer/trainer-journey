@@ -7,7 +7,7 @@
 --   badges(n)       at least n badges
 --   caught(n)       at least n kinds of Pokémon caught (Kanto Pokédex)
 --   any{...}, all{...}
--- `go` (story and post-game) is where the on-screen arrow leads: a list of
+-- `go` (story, post-game, items and Pokédex gifts) is where the on-screen arrow leads: a list of
 -- { map, x, y, when }, the first whose `when` holds (or has none) wins; x/y
 -- is the cell to point at once on that map (the person or the event).
 -- `done` says the entry is finished. `open` says it can be done now (for the
@@ -84,28 +84,28 @@ J.post = {
 -- HMs and key items: where they are and from when. `hm` is the HM number,
 -- `badge` the badge that lets its move be used outside battle, `move` its move id.
 J.items = {
-  { id = "hm1", hm = 1, badge = 2, move = 15, done = flag("FLAG_GOT_HM01"), open = flag("FLAG_GOT_SS_TICKET") },
-  { id = "hm5", hm = 5, badge = 1, move = 148, done = flag("FLAG_GOT_HM05"), open = all({ caught(10), flag("FLAG_SYS_POKEDEX_GET") }) },
-  { id = "hm2", hm = 2, badge = 3, move = 19, done = flag("FLAG_GOT_HM02"), open = all({ flag("FLAG_GOT_HM01"), flag("FLAG_WORLD_MAP_CELADON_CITY") }) },
-  { id = "hm3", hm = 3, badge = 5, move = 57, done = flag("FLAG_GOT_HM03"), open = flag("FLAG_WORLD_MAP_FUCHSIA_CITY") },
-  { id = "hm4", hm = 4, badge = 4, move = 70, done = flag("FLAG_GOT_HM04"), open = flag("FLAG_WORLD_MAP_FUCHSIA_CITY") },
-  { id = "hm6", hm = 6, badge = 6, move = 249, done = flag("FLAG_GOT_HM06"), open = flag("FLAG_SYS_SEVII_MAP_123") },
-  { id = "hm7", hm = 7, badge = 7, move = 127, done = any({ item(ITEM.HM07), flag("FLAG_HIDE_FOUR_ISLAND_ICEFALL_CAVE_1F_HM07") }), open = flag("FLAG_SYS_SEVII_MAP_4567") },
-  { id = "bicycle", done = flag("FLAG_GOT_BICYCLE"), open = flag("FLAG_GOT_BIKE_VOUCHER") },
-  { id = "voucher", done = any({ flag("FLAG_GOT_BIKE_VOUCHER"), flag("FLAG_GOT_BICYCLE") }), open = flag("FLAG_WORLD_MAP_VERMILION_CITY") },
-  { id = "oldrod", done = flag("FLAG_GOT_OLD_ROD"), open = flag("FLAG_WORLD_MAP_VERMILION_CITY") },
-  { id = "vsseeker", done = flag("FLAG_GOT_VS_SEEKER"), open = flag("FLAG_WORLD_MAP_VERMILION_CITY") },
-  { id = "coincase", done = flag("FLAG_GOT_COIN_CASE"), open = flag("FLAG_WORLD_MAP_CELADON_CITY") },
-  { id = "tea", done = flag("FLAG_GOT_TEA"), open = flag("FLAG_WORLD_MAP_CELADON_CITY") },
-  { id = "liftkey", done = any({ item(ITEM.LIFT_KEY), item(ITEM.SILPH_SCOPE), flag("FLAG_RESCUED_MR_FUJI") }), open = flag("FLAG_OPENED_ROCKET_HIDEOUT") },
-  { id = "silphscope", done = any({ item(ITEM.SILPH_SCOPE), flag("FLAG_RESCUED_MR_FUJI") }), open = flag("FLAG_OPENED_ROCKET_HIDEOUT") },
-  { id = "pokeflute", done = flag("FLAG_GOT_POKE_FLUTE"), open = flag("FLAG_RESCUED_MR_FUJI") },
-  { id = "superrod", done = flag("FLAG_GOT_SUPER_ROD"), open = flag("FLAG_GOT_POKE_FLUTE") },
-  { id = "goodrod", done = flag("FLAG_GOT_GOOD_ROD"), open = flag("FLAG_WORLD_MAP_FUCHSIA_CITY") },
-  { id = "cardkey", done = any({ item(ITEM.CARD_KEY), flag("FLAG_HIDE_SAFFRON_ROCKETS") }), open = flag("FLAG_WORLD_MAP_SAFFRON_CITY") },
-  { id = "secretkey", done = any({ item(ITEM.SECRET_KEY), flag("FLAG_BADGE07_GET") }), open = flag("FLAG_WORLD_MAP_CINNABAR_ISLAND") },
-  { id = "tripass", done = any({ item(ITEM.TRI_PASS), flag("FLAG_SYS_SEVII_MAP_123") }), open = flag("FLAG_BADGE07_GET") },
-  { id = "rainbowpass", done = any({ item(ITEM.RAINBOW_PASS), flag("FLAG_SYS_SEVII_MAP_4567") }), open = flag("FLAG_GOT_RUBY") },
+  { id = "hm1", go = { { map = "FR_SSANNE_CAPTAINS_OFFICE", x = 5, y = 4 } }, hm = 1, badge = 2, move = 15, done = flag("FLAG_GOT_HM01"), open = flag("FLAG_GOT_SS_TICKET") },
+  { id = "hm5", go = { { map = "FR_ROUTE_2_EAST_BUILDING", x = 4, y = 6 } }, hm = 5, badge = 1, move = 148, done = flag("FLAG_GOT_HM05"), open = all({ caught(10), flag("FLAG_SYS_POKEDEX_GET") }) },
+  { id = "hm2", go = { { map = "FR_ROUTE_16_HOUSE", x = 4, y = 2 } }, hm = 2, badge = 3, move = 19, done = flag("FLAG_GOT_HM02"), open = all({ flag("FLAG_GOT_HM01"), flag("FLAG_WORLD_MAP_CELADON_CITY") }) },
+  { id = "hm3", go = { { map = "FR_SAFARI_ZONE_SECRET_HOUSE", x = 6, y = 5 } }, hm = 3, badge = 5, move = 57, done = flag("FLAG_GOT_HM03"), open = flag("FLAG_WORLD_MAP_FUCHSIA_CITY") },
+  { id = "hm4", go = { { map = "FR_FUCHSIA_CITY_WARDENS_HOUSE", x = 3, y = 5 } }, hm = 4, badge = 4, move = 70, done = flag("FLAG_GOT_HM04"), open = flag("FLAG_WORLD_MAP_FUCHSIA_CITY") },
+  { id = "hm6", go = { { map = "FR_ONE_ISLAND_KINDLE_ROAD_EMBER_SPA", x = 10, y = 5 } }, hm = 6, badge = 6, move = 249, done = flag("FLAG_GOT_HM06"), open = flag("FLAG_SYS_SEVII_MAP_123") },
+  { id = "hm7", go = { { map = "FR_FOUR_ISLAND_ICEFALL_CAVE_1F", x = 12, y = 16 } }, hm = 7, badge = 7, move = 127, done = any({ item(ITEM.HM07), flag("FLAG_HIDE_FOUR_ISLAND_ICEFALL_CAVE_1F_HM07") }), open = flag("FLAG_SYS_SEVII_MAP_4567") },
+  { id = "bicycle", go = { { map = "FR_CERULEAN_CITY_BIKE_SHOP", x = 9, y = 3 } }, done = flag("FLAG_GOT_BICYCLE"), open = flag("FLAG_GOT_BIKE_VOUCHER") },
+  { id = "voucher", go = { { map = "FR_VERMILION_CITY_POKEMON_FAN_CLUB", x = 5, y = 4 } }, done = any({ flag("FLAG_GOT_BIKE_VOUCHER"), flag("FLAG_GOT_BICYCLE") }), open = flag("FLAG_WORLD_MAP_VERMILION_CITY") },
+  { id = "oldrod", go = { { map = "FR_VERMILION_CITY_HOUSE1", x = 4, y = 5 } }, done = flag("FLAG_GOT_OLD_ROD"), open = flag("FLAG_WORLD_MAP_VERMILION_CITY") },
+  { id = "vsseeker", go = { { map = "FR_VERMILION_CITY_POKEMON_CENTER_1F", x = 6, y = 4 } }, done = flag("FLAG_GOT_VS_SEEKER"), open = flag("FLAG_WORLD_MAP_VERMILION_CITY") },
+  { id = "coincase", go = { { map = "FR_CELADON_CITY_RESTAURANT", x = 1, y = 2 } }, done = flag("FLAG_GOT_COIN_CASE"), open = flag("FLAG_WORLD_MAP_CELADON_CITY") },
+  { id = "tea", go = { { map = "FR_CELADON_CITY_CONDOMINIUMS_1F", x = 2, y = 9 } }, done = flag("FLAG_GOT_TEA"), open = flag("FLAG_WORLD_MAP_CELADON_CITY") },
+  { id = "liftkey", go = { { map = "FR_ROCKET_HIDEOUT_B4F", x = 3, y = 2 } }, done = any({ item(ITEM.LIFT_KEY), item(ITEM.SILPH_SCOPE), flag("FLAG_RESCUED_MR_FUJI") }), open = flag("FLAG_OPENED_ROCKET_HIDEOUT") },
+  { id = "silphscope", go = { { map = "FR_ROCKET_HIDEOUT_B4F", x = 20, y = 5 } }, done = any({ item(ITEM.SILPH_SCOPE), flag("FLAG_RESCUED_MR_FUJI") }), open = flag("FLAG_OPENED_ROCKET_HIDEOUT") },
+  { id = "pokeflute", go = { { map = "FR_LAVENDER_TOWN_VOLUNTEER_POKEMON_HOUSE", x = 3, y = 3 } }, done = flag("FLAG_GOT_POKE_FLUTE"), open = flag("FLAG_RESCUED_MR_FUJI") },
+  { id = "superrod", go = { { map = "FR_ROUTE_12_FISHING_HOUSE", x = 4, y = 4 } }, done = flag("FLAG_GOT_SUPER_ROD"), open = flag("FLAG_GOT_POKE_FLUTE") },
+  { id = "goodrod", go = { { map = "FR_FUCHSIA_CITY_HOUSE2", x = 6, y = 5 } }, done = flag("FLAG_GOT_GOOD_ROD"), open = flag("FLAG_WORLD_MAP_FUCHSIA_CITY") },
+  { id = "cardkey", go = { { map = "FR_SILPH_CO_5F", x = 22, y = 21 } }, done = any({ item(ITEM.CARD_KEY), flag("FLAG_HIDE_SAFFRON_ROCKETS") }), open = flag("FLAG_WORLD_MAP_SAFFRON_CITY") },
+  { id = "secretkey", go = { { map = "FR_POKEMON_MANSION_B1F", x = 5, y = 7 } }, done = any({ item(ITEM.SECRET_KEY), flag("FLAG_BADGE07_GET") }), open = flag("FLAG_WORLD_MAP_CINNABAR_ISLAND") },
+  { id = "tripass", go = { { map = "FR_CINNABAR_ISLAND_POKEMON_CENTER_1F", x = 11, y = 5 } }, done = any({ item(ITEM.TRI_PASS), flag("FLAG_SYS_SEVII_MAP_123") }), open = flag("FLAG_BADGE07_GET") },
+  { id = "rainbowpass", go = { { map = "SEVII_ONE_ISLAND_POKECENTER", x = 15, y = 6 } }, done = any({ item(ITEM.RAINBOW_PASS), flag("FLAG_SYS_SEVII_MAP_4567") }), open = flag("FLAG_GOT_RUBY") },
 }
 
 -- What blocks the way, and what it takes: `hm` (with the badge and someone who
@@ -133,12 +133,12 @@ J.blocks = {
 
 -- Gifts for the number of kinds caught.
 J.dex = {
-  { id = "aide10", need = 10, done = flag("FLAG_GOT_HM05"), open = flag("FLAG_SYS_POKEDEX_GET") },
-  { id = "aide20", need = 20, done = flag("FLAG_GOT_EVERSTONE_FROM_OAKS_AIDE"), open = flag("FLAG_SYS_POKEDEX_GET") },
-  { id = "aide30", need = 30, done = flag("FLAG_GOT_ITEMFINDER"), open = flag("FLAG_SYS_POKEDEX_GET") },
-  { id = "aide40", need = 40, done = flag("FLAG_GOT_AMULET_COIN_FROM_OAKS_AIDE"), open = flag("FLAG_SYS_POKEDEX_GET") },
-  { id = "aide50", need = 50, done = flag("FLAG_GOT_EXP_SHARE_FROM_OAKS_AIDE"), open = flag("FLAG_SYS_POKEDEX_GET") },
-  { id = "natdex", need = 60, done = flag("FLAG_SYS_NATIONAL_DEX"), open = GAME_CLEAR },
+  { id = "aide10", go = { { map = "FR_ROUTE_2_EAST_BUILDING", x = 4, y = 6 } }, need = 10, done = flag("FLAG_GOT_HM05"), open = flag("FLAG_SYS_POKEDEX_GET") },
+  { id = "aide20", go = { { map = "FR_ROUTE_10_POKEMON_CENTER_1F", x = 12, y = 5 } }, need = 20, done = flag("FLAG_GOT_EVERSTONE_FROM_OAKS_AIDE"), open = flag("FLAG_SYS_POKEDEX_GET") },
+  { id = "aide30", go = { { map = "FR_ROUTE_11_EAST_ENTRANCE_2F", x = 2, y = 6 } }, need = 30, done = flag("FLAG_GOT_ITEMFINDER"), open = flag("FLAG_SYS_POKEDEX_GET") },
+  { id = "aide40", go = { { map = "FR_ROUTE_16_NORTH_ENTRANCE_2F", x = 10, y = 6 } }, need = 40, done = flag("FLAG_GOT_AMULET_COIN_FROM_OAKS_AIDE"), open = flag("FLAG_SYS_POKEDEX_GET") },
+  { id = "aide50", go = { { map = "FR_ROUTE_15_WEST_ENTRANCE_2F", x = 5, y = 5 } }, need = 50, done = flag("FLAG_GOT_EXP_SHARE_FROM_OAKS_AIDE"), open = flag("FLAG_SYS_POKEDEX_GET") },
+  { id = "natdex", go = { { map = "FR_OAKS_LAB", x = 6, y = 3 } }, need = 60, done = flag("FLAG_SYS_NATIONAL_DEX"), open = GAME_CLEAR },
 }
 
 return J

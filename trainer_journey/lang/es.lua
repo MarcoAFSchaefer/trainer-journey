@@ -145,4 +145,9 @@ return {
   SHOW_ARROW = "Flecha en pantalla",
   ARROW_STEPS = "%d pasos",
   ARROW_FERRY = "Toma el ferry Seagallop",
+  FOLLOW = "Guíame hasta aquí",
+  UNFOLLOW = "Dejar de guiar",
+  PINNED = "MI META",
+  PINNED_LABEL = "TU OBJETIVO",
+  STORY_NEXT = "Historia: %s",
 }

@@ -146,4 +146,9 @@ return {
   SHOW_ARROW = "Arrow on screen",
   ARROW_STEPS = "%d steps",
   ARROW_FERRY = "Take the Seagallop ferry",
+  FOLLOW = "Guide me here",
+  UNFOLLOW = "Stop guiding",
+  PINNED = "MY GOAL",
+  PINNED_LABEL = "YOUR GOAL",
+  STORY_NEXT = "Story: %s",
 }

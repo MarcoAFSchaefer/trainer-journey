@@ -145,4 +145,9 @@ return {
   SHOW_ARROW = "Seta na tela",
   ARROW_STEPS = "%d passos",
   ARROW_FERRY = "Pegue a balsa Seagallop",
+  FOLLOW = "Me guie até aqui",
+  UNFOLLOW = "Parar de guiar",
+  PINNED = "MEU ALVO",
+  PINNED_LABEL = "SEU OBJETIVO",
+  STORY_NEXT = "História: %s",
 }

@@ -47,6 +47,12 @@ While you walk, an arrow at the border of the game screen points the way to the 
 
 It counts steps in a straight line, so ledges, trees and walls can make the real walk longer. It is hidden in battles, menus, messages and cutscenes. Turn it on or off with the **Arrow on screen** switch at the bottom of the Journey panel, or the **Arrow to the objective** option.
 
+## A goal of your own
+
+The arrow normally follows the story. To go after something else, open the Journey panel, click its line (HM03 Surf in "HMs & items", an aide's gift in "Pokédex", a legendary in "Post-game"...) and press **Guide me here** in the box below the list. The line gets a "MY GOAL" mark, the arrow leads to it, and the Next step panel shows it with the story's next step underneath.
+
+The goal is dropped when you get the thing, or when you press **Stop guiding**. Lines hidden as spoilers cannot be chosen until you show upcoming steps.
+
 ## How it knows
 
 The guide reads the same flags the game uses for its story (badges, gifts received, people rescued, places visited), the key items in your bag, the Pokédex count and your party's moves. It never writes anything.

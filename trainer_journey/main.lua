@@ -71,6 +71,16 @@ return function(mod)
     local now = arrowOption()
     if now ~= lastOption then lastOption = now; setArrow(now) end
   end
+  -- A goal of the player's own choosing ("items:hm3"): the arrow and the Next
+  -- step panel follow it until it is done or let go.
+  do
+    local saved = mod.cache and mod.cache.read and mod.cache:read("pin")
+    settings.pin = type(saved) == "string" and saved:match("^%a+:[%w_]+$") or nil
+  end
+  local function setPin(key)
+    settings.pin = key
+    if mod.cache and mod.cache.write then mod.cache:write("pin", key or "") end
+  end
   local function setSpoilers(on)
     settings.spoilers = on and true or false
     if mod.cache and mod.cache.write then mod.cache:write("spoilers", settings.spoilers and "1" or "0") end
@@ -198,7 +208,7 @@ return function(mod)
     local rows, byId = {}, {}
     for _, entry in ipairs(J.items) do
       local title, hint = texts("ITEMS", entry.id)
-      local row = { id = entry.id, kind = "item", title = title, hint = hint, hm = entry.hm }
+      local row = { id = entry.id, kind = "item", title = title, hint = hint, hm = entry.hm, def = entry }
       if met(entry.done, r) then row.status = "done"
       elseif met(entry.open, r) then row.status = "open"
       else row.status = "later" end
@@ -252,7 +262,7 @@ return function(mod)
     local rows = {}
     for _, entry in ipairs(J.dex) do
       local title, hint = texts("DEX", entry.id)
-      local row = { id = entry.id, kind = "dex", title = title, hint = hint, need = entry.need, have = r.caught }
+      local row = { id = entry.id, kind = "dex", title = title, hint = hint, need = entry.need, have = r.caught, def = entry }
       if met(entry.done, r) then row.status, row.note = "done", T("GOT_IT")
       elseif not met(entry.open, r) then row.status, row.note = "open", T(entry.id == "natdex" and "AFTER_LEAGUE" or "AFTER_DEX")
       elseif r.caught >= entry.need then row.status, row.note = "ready", T("GO_GET_IT")
@@ -296,6 +306,22 @@ return function(mod)
       if row.optional and row.status == "open" then ready[#ready + 1] = { kind = "side", text = F("READY_SIDE", row.title) } end
     end
     out.ready = ready
+    -- The player's own goal, while it is still to do, leads the arrow.
+    for name, list in pairs(out.lists) do
+      for _, row in ipairs(list) do
+        row.key = name .. ":" .. row.id
+        row.canPin = row.status ~= "done" and type(row.def) == "table" and type(row.def.go) == "table"
+        if settings.pin == row.key then
+          if row.status == "done" then setPin(nil) else row.pinned, out.pinned = true, row end
+        end
+      end
+    end
+    if out.pinned then
+      out.goal = nil
+      for _, dest in ipairs(out.pinned.def.go) do
+        if dest.when == nil or met(dest.when, r) then out.goal = dest break end
+      end
+    end
     -- With spoilers hidden, what comes later is only counted, never named.
     for _, list in pairs(out.lists) do
       for _, row in ipairs(list) do row.masked = not settings.spoilers and row.status == "later" end
@@ -309,9 +335,10 @@ return function(mod)
   local cached, cachedAt = nil, -1
   local function current(clock)
     clock = tonumber(clock) or 0
-    if not cached or clock - cachedAt >= 0.5 or clock < cachedAt or cached.spoilers ~= settings.spoilers then
+    if not cached or clock - cachedAt >= 0.5 or clock < cachedAt or cached.spoilers ~= settings.spoilers or cached.pinKey ~= settings.pin then
       local ok, value = pcall(model)
       cached = ok and value or { error = tostring(value) }
+      cached.pinKey = settings.pin
       cachedAt = clock
     end
     return cached
@@ -319,6 +346,7 @@ return function(mod)
   local function refresh() cached = nil end
   local Panel = load_("panel.lua", { T = T, F = F, font = I18n.font, model = current, refresh = refresh,
     spoilers = function() return settings.spoilers end, setSpoilers = setSpoilers,
+    pin = function() return settings.pin end, setPin = function(key) setPin(key); refresh() end,
     arrow = function() return settings.arrow end, setArrow = setArrow })
   local failed
   local Nav = load_("nav.lua", { font = I18n.font, game = function() return game end })
@@ -410,6 +438,7 @@ return function(mod)
   mod.exports.panel = Panel
   mod.exports.setSpoilers = setSpoilers
   mod.exports.setArrow = setArrow
+  mod.exports.setPin = setPin
   mod.exports.nav = Nav
   mod.exports.arrowOn = function() return settings.arrow end
 end

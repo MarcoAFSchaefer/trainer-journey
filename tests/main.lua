@@ -218,6 +218,20 @@ function love.load()
   mod.options_.arrow = false; update(); mod.options_.arrow = true; update()
   check(mod.exports.arrowOn() == true, "changing the option sets it again")
 
+  -- a goal of the player's own
+  store.flags[names.FLAG_GOT_HM06] = nil
+  mod.exports.setPin("items:hm6")
+  m = model()
+  check(m.pinned and m.pinned.id == "hm6" and m.goal.map == "FR_ONE_ISLAND_KINDLE_ROAD_EMBER_SPA", "a chosen goal leads the arrow: " .. tostring(m.goal and m.goal.map))
+  check(cache.pin == "items:hm6" and find(m.lists.items, "hm6").pinned, "and is remembered")
+  draw("trainer_journey.next", 480, 240, "next-pinned-" .. lang)
+  P("down", 15 + 92 * 1, 20); mod.exports.panel.state.selected.items = nil
+  draw("trainer_journey.journey", 480, 432, "journey-pinned-" .. lang)
+  set("FLAG_GOT_HM06")
+  m = model()
+  check(m.pinned == nil and cache.pin == "" and m.goal and m.goal.map == "FR_OAKS_LAB", "once it is yours the goal lets go and the story leads again")
+  for _, row in ipairs(m.lists.items) do check(row.status == "done" or row.canPin, "every item still to get can be chosen: " .. row.id) end
+
   -- a game the guide does not know
   family = "rse"
   m = model()
