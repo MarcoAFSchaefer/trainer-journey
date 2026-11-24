@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.1
+
+- The arrow is not worked out or drawn while Trainer Pilot's bot is running.
+
 ## 0.3.0
 
 - **Your own goal.** Choose a line in the Journey panel (an HM, a key item, a Pokédex gift, a side trip, a legendary) and press **Guide me here**: the arrow leads there and the Next step panel shows it, with the story's next step under it. It lets go by itself when you get it, or with **Stop guiding**.

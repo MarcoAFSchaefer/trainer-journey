@@ -366,6 +366,9 @@ return function(mod)
   mod.hooks:wrap("render.hud", function(nextHook, g, viewport)
     nextHook(g, viewport)
     if not (settings.arrow and game) then return end
+    -- nobody follows an arrow while Trainer Pilot is playing: leave the frame alone
+    local pilot = mod.find and mod.find("trainer_pilot")
+    if pilot and type(pilot.exports) == "table" and type(pilot.exports.bot) == "table" and pilot.exports.bot.running == true then return end
     local ok, err = pcall(function()
       local m = current(love.timer.getTime())
       if not (m.goal and fieldIdle()) then return end
