@@ -143,4 +143,7 @@ return {
   JOURNEY_PROGRESS = "Journey: %d of %d steps",
   READY_NOW = "ON THE WAY",
   AND_MORE = "+%d more in the Journey panel",
+  SHOW_ARROW = "Arrow on screen",
+  ARROW_STEPS = "%d steps",
+  ARROW_FERRY = "Take the Seagallop ferry",
 }

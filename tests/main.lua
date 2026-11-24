@@ -19,6 +19,20 @@ function love.load()
   package.preload["src.core.game3.scripting.space"] = function() return { getStore = function() return store end } end
   package.preload["src.core.game3.bag"] = function() return { get = function(bag, id) return bag[id] or 0 end } end
   package.preload["src.core.game3.dex"] = function() return { countCaught = function(dex, which) assert(which == "kanto"); return dex.caught end } end
+  -- maps: the game's warps and connections, a made-up size for each map
+  local ENGINE = os.getenv("ENGINE_SRC") or "/tmp/eng"
+  package.preload["src.core.game3.connections"] = function() return dofile(ENGINE .. "/src/core/game3/connections.lua") end
+  local warps = dofile(os.getenv("WARPS_TABLE") or "/tmp/gd/warps.lua")
+  local conns = dofile(os.getenv("CONNECTIONS_TABLE") or "/tmp/gd/connections.lua")
+  local mapdefs = {}
+  for id, list in pairs(warps) do mapdefs[id] = { warps = list, connections = conns[id] or {}, midLayout = { width = 40, height = 40 } } end
+  local MapStub, PlayerStub = { current = nil }, { cellX = 5, cellY = 5, px = 80, py = 80 }
+  package.preload["src.core.game3.map"] = function() return MapStub end
+  package.preload["src.core.game3.player"] = function() return PlayerStub end
+  local battling = false
+  package.preload["src.core.game3.battle"] = function() return { isActive = function() return battling end } end
+  package.preload["src.world.game3.WorldAPI"] = function() return { new = function() return {
+    availableFieldActions = function() return {}, nil end } end } end
   package.preload["src.core.game3.profile"] = function() return { forSession = function() return { family = family } end } end
 
   local logs = {}
@@ -47,7 +61,7 @@ function love.load()
   end
 
   local session = { bag = {}, dex = { caught = 0 }, party = { { species = 4, moves = { 10, 45 } } } }
-  local game = { generation = 3, session = session }
+  local game = { generation = 3, session = session, data = { maps = mapdefs } }
   local function update() mod.hooks_["core.update"](function() end, game, 1 / 60) end
   local function model() return mod.exports.debugModel() end
   local function find(list, id) for _, row in ipairs(list) do if row.id == id then return row end end end
@@ -149,6 +163,60 @@ function love.load()
   m = model()
   check(m.next.id == "natdex" and m.next.note:find("45", 1, true), "after the league: the National Pokédex, with the count")
   draw("trainer_journey.next", 480, 240, "next-post-" .. lang)
+
+  -- the arrow
+  local Nav = mod.exports.nav
+  local function at(map, x, y) MapStub.current, PlayerStub.cellX, PlayerStub.cellY, PlayerStub.px, PlayerStub.py = map, x, y, x * 16, y * 16 end
+  at("FR_PALLET_TOWN", 10, 10)
+  local p = Nav.point({ map = "FR_PEWTER_CITY_GYM", x = 6, y = 5 }, {})
+  check(p and p.edge == "north" and p.y == -1, "from Pallet Town the way to Pewter Gym goes north")
+  at("FR_VIRIDIAN_CITY", 20, 20)
+  p = Nav.point({ map = "FR_VIRIDIAN_CITY_MART", x = 2, y = 3 }, {})
+  local martDoor
+  for _, w in ipairs(warps.FR_VIRIDIAN_CITY) do if w.destMap == "FR_VIRIDIAN_CITY_MART" then martDoor = w end end
+  check(p and p.x == martDoor.x and p.y == martDoor.y, "in Viridian City the arrow points at the Mart door")
+  at("FR_VIRIDIAN_CITY_MART", 4, 7)
+  p = Nav.point({ map = "FR_VIRIDIAN_CITY_MART", x = 2, y = 3 }, {})
+  check(p and p.final and p.x == 2, "inside, it points at the clerk")
+  check(Nav.point({ map = "FR_CERULEAN_CITY" }, {}) ~= nil and Nav.point({ map = "FR_VIRIDIAN_CITY_MART" }, {}).here, "on the objective map without a cell: here")
+  at("FR_VERMILION_CITY", 20, 20)
+  check(Nav.point({ map = "SEVII_ONE_ISLAND_POKECENTER", x = 15, y = 6 }, {}) == nil, "no way to the Sevii Islands without a pass")
+  p = Nav.point({ map = "SEVII_ONE_ISLAND_POKECENTER", x = 15, y = 6 }, { ferry123 = true })
+  check(p and p.x ~= nil, "with the Tri-Pass the way goes to the pier")
+  at("FR_SSANNE_EXTERIOR", 30, 8)
+  check(Nav.point({ map = "SEVII_ONE_ISLAND_POKECENTER", x = 15, y = 6 }, { ferry123 = true }).ferry, "at the pier: take the ferry")
+  -- drawing over a game picture, on screen and off screen
+  local hud = mod.hooks_["render.hud"]
+  local vp = { width = 720, height = 480, gameX = 0, gameY = 0, gameWidth = 720, gameHeight = 480, scale = 3 }
+  local function hudShot(name)
+    local c = G.newCanvas(720, 480)
+    G.setCanvas(c); G.clear(0.35, 0.55, 0.35, 1)
+    G.setColor(0.9, 0.9, 0.9); G.rectangle("fill", 345, 225, 30, 30) -- the player
+    hud(function() end, game, vp)
+    G.setCanvas()
+    local f = io.open(OUT .. "/arrow-" .. name .. ".png", "wb"); f:write(c:newImageData():encode("png"):getString()); f:close()
+  end
+  -- current goal in this game is the National Pokédex: needs 60, so no goal; give it 60
+  session.dex.caught = 60
+  m = model()
+  check(m.goal and m.goal.map == "FR_OAKS_LAB", "the goal follows the step: " .. tostring(m.goal and m.goal.map))
+  at("FR_OAKS_LAB", 6, 8)
+  hudShot("near-" .. lang)
+  at("FR_OAKS_LAB", 6, 12)
+  PlayerStub.cellX = 20; PlayerStub.px = 320
+  hudShot("far-" .. lang)
+  at("FR_ROUTE_1", 10, 30)
+  hudShot("edge-" .. lang)
+  battling = true
+  hudShot("battle-" .. lang)
+  battling = false
+  -- the switch in the panel, and the option winning again when it changes
+  check(mod.exports.arrowOn() == true, "the arrow is on by default")
+  draw("trainer_journey.journey", 480, 432)
+  P("down", 300, 410)
+  check(mod.exports.arrowOn() == false and cache.arrow == "0,1", "the panel switch turns it off and is remembered")
+  mod.options_.arrow = false; update(); mod.options_.arrow = true; update()
+  check(mod.exports.arrowOn() == true, "changing the option sets it again")
 
   -- a game the guide does not know
   family = "rse"

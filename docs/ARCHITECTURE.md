@@ -6,6 +6,7 @@ trainer_journey/
   main.lua      reads the save, builds the model, registers the panels with Trainer Desk
   journey.lua   the journey as data: story, post-game, items, obstacles, Pokédex rewards
   panel.lua     draws the two panels and handles clicks
+  nav.lua       the arrow: plans the way between maps and draws it over the game
   i18n.lua      language and fonts (the same file as in the other Trainer mods)
   lang/         texts: en (reference), es, pt, ja
   fonts/        Noto Sans JP subset for Japanese
@@ -44,6 +45,20 @@ trainer_journey/
 - the game family through `src.core.game3.profile` (Ruby/Sapphire/Emerald are not guided).
 
 The model is rebuilt at most twice a second. With spoilers hidden, rows whose status is "later" are marked `masked` and the panel draws them as one summary row.
+
+## The arrow
+
+Story and post-game steps have `go`: a list of `{ map, x, y, when }` destinations, the first whose `when` holds wins (Oak's Lab once you hold the parcel, the Viridian Mart before). Cells are the people or events whose scripts finish the step, found in the game's event data.
+
+`nav.lua` treats every map as a point joined to others by its connections (cost 1), its warps (cost 3) and, with the Tri-Pass or Rainbow Pass, the Seagallop ferry between the Vermilion pier and the island harbors (cost 8). A Dijkstra search from the current map to the destination gives the first link, cached until the map or the destination changes. On the current map the arrow then points at:
+
+- the nearest warp cell leading to the next map;
+- the cell just past the map edge, within the stretch the neighbouring map lies along (`Connections.sizeOf` and the connection offset);
+- the destination cell, on its own map.
+
+It is drawn in the `render.hud` hook, which gets the game picture's rectangle: the player is at its centre (minus the camera pan), one cell is 16 game pixels times the viewport's scale. A point on screen gets a bobbing marker; otherwise the arrow goes where the line from the player towards it meets the border. Nothing is drawn unless the field is idle (no battle, and `WorldAPI:availableFieldActions()` gives no reason).
+
+The switch is kept in the mod cache as `arrow` = "<on>,<option when set>": the panel's choice holds until the option itself changes.
 
 ## Panels
 

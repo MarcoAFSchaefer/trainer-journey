@@ -203,7 +203,7 @@ return function(env)
         if state.tab ~= key then state.tab, state.page, state.paged = key, 1, false end
       end, 12)
     end
-    line(headline(m, state.tab), 12, 42, C.muted, 11, 456)
+    line(headline(m, state.tab), 12, 42, C.muted, 11, 340)
 
     local rows = visible(m.lists[state.tab])
     local per = state.perPage
@@ -251,16 +251,17 @@ return function(env)
     else
       para(T("PICK_A_ROW"), 20, 330, C.muted, 12, 440, 3)
     end
-    toggle(T("SHOW_UPCOMING"), 10, 400, 300, m.spoilers, function() env.setSpoilers(not env.spoilers()) end)
+    toggle(T("SHOW_UPCOMING"), 10, 400, 228, m.spoilers, function() env.setSpoilers(not env.spoilers()) end)
+    toggle(T("SHOW_ARROW"), 242, 400, 228, env.arrow(), function() env.setArrow(not env.arrow()) end)
     if pages > 1 then
       for index, label in ipairs({ "<", ">" }) do
-        local bx = index == 1 and 360 or 442
+        local bx = index == 1 and 380 or 446
         local live = (index == 1 and state.page > 1) or (index == 2 and state.page < pages)
-        button(label, bx, 400, 28, 24, live and C.off or C.card, live and function()
+        button(label, bx, 39, 24, 18, live and C.off or C.card, live and function()
           state.page, state.paged = state.page + (index == 1 and -1 or 1), true
-        end or nil, 12, live and C.text or C.line)
+        end or nil, 11, live and C.text or C.line)
       end
-      centred(state.page .. "/" .. pages, 388, 400, 54, 24, C.muted, 11)
+      centred(state.page .. "/" .. pages, 404, 39, 42, 18, C.muted, 10)
     end
     G.pop()
   end

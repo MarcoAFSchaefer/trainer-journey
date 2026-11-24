@@ -142,4 +142,7 @@ return {
   JOURNEY_PROGRESS = "Jornada: %d de %d passos",
   READY_NOW = "NO CAMINHO",
   AND_MORE = "+%d no painel Jornada",
+  SHOW_ARROW = "Seta na tela",
+  ARROW_STEPS = "%d passos",
+  ARROW_FERRY = "Pegue a balsa Seagallop",
 }

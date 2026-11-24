@@ -20,10 +20,13 @@ return function(mod)
     { key = "language", label = "LANGUAGE", type = "choice", default = "en",
       choices = { { "ENGLISH", "en" }, { "ESPANOL", "es" }, { "PORTUGUES", "pt" }, { "JAPANESE", "ja" } },
       description = "Language of the guide's panels." },
+    { key = "arrow", label = "ARROW TO THE OBJECTIVE", type = "toggle", default = true,
+      description = "An arrow at the border of the game screen points the way to the next objective. The Journey panel has the same switch." },
   })
   local function option(key)
     local ok, value = pcall(function() return mod.options:get(key) end)
-    return ok and value or nil
+    if ok then return value end
+    return nil
   end
   local I18n = assert(load(assert(mod:read("i18n.lua")), "@trainer_journey/i18n.lua"))()(mod, function() return option("language") end)
   local T, F = I18n.T, I18n.F
@@ -47,6 +50,26 @@ return function(mod)
   do
     local saved = mod.cache and mod.cache.read and mod.cache:read("spoilers")
     settings.spoilers = saved == "1"
+  end
+  -- The arrow: the mod option sets it, the panel's switch changes it until the
+  -- option itself is changed again.
+  local function arrowOption() return option("arrow") ~= false end
+  do
+    local saved = mod.cache and mod.cache.read and mod.cache:read("arrow")
+    local on, from = tostring(saved or ""):match("^([01]),([01])$")
+    local now = arrowOption() and "1" or "0"
+    settings.arrow = (on and from == now) and on == "1" or arrowOption()
+  end
+  local function setArrow(on)
+    settings.arrow = on and true or false
+    if mod.cache and mod.cache.write then
+      mod.cache:write("arrow", (settings.arrow and "1" or "0") .. "," .. (arrowOption() and "1" or "0"))
+    end
+  end
+  local lastOption = arrowOption()
+  local function syncArrowOption()
+    local now = arrowOption()
+    if now ~= lastOption then lastOption = now; setArrow(now) end
   end
   local function setSpoilers(on)
     settings.spoilers = on and true or false
@@ -89,6 +112,8 @@ return function(mod)
     r.badges = 0
     for n = 1, 8 do if r.flag(string.format("FLAG_BADGE%02d_GET", n)) then r.badges = r.badges + 1 end end
     r.hasBadge = function(n) return r.flag(string.format("FLAG_BADGE%02d_GET", n)) end
+    r.ferry123 = r.flag("FLAG_SYS_SEVII_MAP_123") or r.item(J.ITEM.TRI_PASS)
+    r.ferry4567 = r.flag("FLAG_SYS_SEVII_MAP_4567") or r.item(J.ITEM.RAINBOW_PASS)
     r.caught = Dex and s.dex and tonumber(try(Dex.countCaught, s.dex, "kanto")) or 0
     -- who in the party knows a move, by move id
     r.knows = {}
@@ -142,7 +167,7 @@ return function(mod)
     local rows, current, done, total = {}, nil, 0, 0
     for _, step in ipairs(list) do
       local title, hint = texts(group, step.id)
-      local row = { id = step.id, kind = kind, title = title, hint = hint, optional = step.optional == true }
+      local row = { id = step.id, kind = kind, title = title, hint = hint, optional = step.optional == true, def = step }
       if met(step.done, r) then
         row.status = "done"
       elseif gate ~= nil and not met(gate, r) and not step.optional then
@@ -250,6 +275,11 @@ return function(mod)
     out.lists = { story = story.rows, items = items, blocks = blocks, post = post.rows, dex = buildDex(r) }
     out.story, out.post = story, post
     out.next = story.current or post.current
+    -- where the arrow leads: the first destination of the step that applies
+    out.ferry123, out.ferry4567 = r.ferry123, r.ferry4567
+    for _, dest in ipairs(out.next and out.next.def.go or {}) do
+      if dest.when == nil or met(dest.when, r) then out.goal = dest break end
+    end
     out.finished = story.current == nil and post.current == nil
     -- Ready now: rewards waiting, things that can be picked up, moves to teach.
     local ready = {}
@@ -288,7 +318,37 @@ return function(mod)
   end
   local function refresh() cached = nil end
   local Panel = load_("panel.lua", { T = T, F = F, font = I18n.font, model = current, refresh = refresh,
-    spoilers = function() return settings.spoilers end, setSpoilers = setSpoilers })
+    spoilers = function() return settings.spoilers end, setSpoilers = setSpoilers,
+    arrow = function() return settings.arrow end, setArrow = setArrow })
+  local failed
+  local Nav = load_("nav.lua", { font = I18n.font, game = function() return game end })
+
+  -- Only on the field, with nothing else going on: no battle, menu, message or script.
+  local world
+  local function fieldIdle()
+    local Battle, World = opt("src.core.game3.battle"), opt("src.world.game3.WorldAPI")
+    if Battle and try(Battle.isActive) == true then return false end
+    if not World then return false end
+    world = world or try(World.new, game, "trainer_journey")
+    if not world then return false end
+    local list, why = try(world.availableFieldActions, world)
+    return type(list) == "table" and why == nil
+  end
+  local arrowTexts = { steps = function(n) return F("ARROW_STEPS", n) end }
+  mod.hooks:wrap("render.hud", function(nextHook, g, viewport)
+    nextHook(g, viewport)
+    if not (settings.arrow and game) then return end
+    local ok, err = pcall(function()
+      local m = current(love.timer.getTime())
+      if not (m.goal and fieldIdle()) then return end
+      arrowTexts.ferry = T("ARROW_FERRY")
+      Nav.draw(Nav.point(m.goal, m), viewport, love.timer.getTime(), arrowTexts)
+    end)
+    if not ok and not failed then
+      failed = true
+      mod.log:warn("Trainer Journey arrow stopped: %s", tostring(err))
+    end
+  end, 870)
 
   local docked
   local function dockApi()
@@ -320,10 +380,10 @@ return function(mod)
     docked = { api = api, language = language }
   end
 
-  local failed
   mod.hooks:wrap("core.update", function(nextHook, updateGame, dt)
     if not failed then
       local ok, err = pcall(function()
+        syncArrowOption()
         local api = game and dockApi()
         if api then syncDock(api) else undock() end
       end)
@@ -335,12 +395,13 @@ return function(mod)
     return nextHook(updateGame, dt)
   end, 870)
   mod.hooks:wrap("core.quit_to_launcher", function(nextHook)
-    game = nil
+    game, world = nil, nil
     pcall(undock)
     return nextHook()
   end, 870)
   mod.events:on("game.ready", function(payload)
-    game, cached = payload and payload.game, nil
+    game, cached, world = payload and payload.game, nil, nil
+    Nav.reset()
   end)
 
   mod.exports = mod.exports or {}
@@ -348,4 +409,7 @@ return function(mod)
   mod.exports.debugSetGame = function(g) game, cached = g, nil end
   mod.exports.panel = Panel
   mod.exports.setSpoilers = setSpoilers
+  mod.exports.setArrow = setArrow
+  mod.exports.nav = Nav
+  mod.exports.arrowOn = function() return settings.arrow end
 end

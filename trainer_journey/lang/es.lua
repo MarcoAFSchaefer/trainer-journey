@@ -142,4 +142,7 @@ return {
   JOURNEY_PROGRESS = "Viaje: %d de %d pasos",
   READY_NOW = "DE CAMINO",
   AND_MORE = "+%d más en el panel Viaje",
+  SHOW_ARROW = "Flecha en pantalla",
+  ARROW_STEPS = "%d pasos",
+  ARROW_FERRY = "Toma el ferry Seagallop",
 }

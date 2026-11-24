@@ -37,6 +37,16 @@ Click a line to read it in full in the box below the list. The mouse wheel, or t
 
 With **Show upcoming steps** off (the default), entries you have not reached yet are not named: the list ends with "N more steps to come". Turn the switch on to see everything; turn it off again whenever you like. The current objective is always shown.
 
+## The arrow
+
+While you walk, an arrow at the border of the game screen points the way to the current objective, with the number of steps to the point it shows:
+
+- on another map: the door, cave, stair or map edge to take next on the way;
+- on the objective's map: the person to talk to or the event (when the guide knows the spot), as a marker bobbing over it when it is on screen;
+- at a harbor, when the way goes by sea: "Take the Seagallop ferry".
+
+It counts steps in a straight line, so ledges, trees and walls can make the real walk longer. It is hidden in battles, menus, messages and cutscenes. Turn it on or off with the **Arrow on screen** switch at the bottom of the Journey panel, or the **Arrow to the objective** option.
+
 ## How it knows
 
 The guide reads the same flags the game uses for its story (badges, gifts received, people rescued, places visited), the key items in your bag, the Pokédex count and your party's moves. It never writes anything.

@@ -8,4 +8,4 @@ JOURNEY_MOD=../trainer_journey FLAGS_TABLE=<path to flags_table.lua> TEST_LANG=e
   xvfb-run -a -s "-screen 0 1280x800x24" love .
 ```
 
-`FLAGS_TABLE` is the game's generated flag table (`%APPDATA%\pokemon-love2d\firered\data\generated\gba\flags_table.lua`), used for the real flag names. Screenshots go to `TEST_OUT` (default `/tmp/journey_out`). The run ends with `ALL JOURNEY CHECKS PASSED`.
+`FLAGS_TABLE`, `WARPS_TABLE` and `CONNECTIONS_TABLE` are the game's generated flag table (`flags_table.lua`, `warps.lua`, `connections.lua` in `%APPDATA%\pokemon-love2d\firered\data\generated\gba\`), and `ENGINE_SRC` the game folder (for `src/core/game3/connections.lua`). Screenshots go to `TEST_OUT` (default `/tmp/journey_out`). The run ends with `ALL JOURNEY CHECKS PASSED`.

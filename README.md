@@ -11,6 +11,7 @@ A journey guide for Pokémon FireRed/LeafGreen on Gen1Recomp (mod API 3). It rea
   - **Obstacles:** what blocks the way (small trees, water, boulders, Snorlax, the Saffron gates, the badge gates...) and what you still need for each, including a Pokémon that knows the move.
   - **Post-game:** National Pokédex, Celio's network (Ruby and Sapphire), Mewtwo, and the three legendary birds.
   - **Pokédex:** the gifts from Professor Oak's aides for 10 to 50 kinds caught, and the National Pokédex at 60.
+- **Arrow on the game screen:** points the way to the current objective, at the border of the game picture, with the number of steps. It follows the real links between maps (edges, doors, caves, stairs, and the Seagallop ferry once you hold the passes), so it points at the next door or edge to take, and at the person to talk to once you are on the objective's map. It hides during battles, menus and messages. Turn it off with the **Arrow on screen** switch or the **Arrow to the objective** option.
 - **No spoilers by default:** steps you have not reached yet show as a count ("5 more steps to come"). The **Show upcoming steps** switch in the Journey panel names them all; the choice is remembered.
 
 ## Compatibility
@@ -35,6 +36,7 @@ Its panels appear in the Trainer Desk docks, so Trainer Desk is needed to see th
 | Option | Default | What it does |
 | --- | --- | --- |
 | Language | English | Language of the panels: ENGLISH, ESPANOL, PORTUGUES or JAPANESE. |
+| Arrow to the objective | On | The arrow on the game screen. The Journey panel's switch changes it too; changing the option again sets it back to the option. |
 
 ## Languages
 
@@ -52,6 +54,7 @@ The panels are in English, Spanish, Portuguese and Japanese. Place and item name
 
 - A few steps have no flag of their own and are judged by what follows them or by a key item in the bag (for example, the Rocket Hideout is done once you hold the Silph Scope).
 - Story steps are listed in the usual order; doing things in another order is fine, and the next step is always the first one not done.
+- The arrow plans by the links between maps, not by the tiles: it knows which door or edge leads on, but not obstacles inside a map (a ledge, a tree to cut, a puzzle). Some objectives (the Safari Zone area with the Gold Teeth, Silph Co. floors, the Pokémon Mansion) point to the map, not to the exact spot.
 - Ruby, Sapphire and Emerald are not covered.
 
 ## License

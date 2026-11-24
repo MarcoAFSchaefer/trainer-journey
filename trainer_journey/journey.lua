@@ -7,6 +7,9 @@
 --   badges(n)       at least n badges
 --   caught(n)       at least n kinds of Pokémon caught (Kanto Pokédex)
 --   any{...}, all{...}
+-- `go` (story and post-game) is where the on-screen arrow leads: a list of
+-- { map, x, y, when }, the first whose `when` holds (or has none) wins; x/y
+-- is the cell to point at once on that map (the person or the event).
 -- `done` says the entry is finished. `open` says it can be done now (for the
 -- spoiler filter and the "ready now" list); without it an entry is open once
 -- the entries before it are done.
@@ -28,49 +31,54 @@ local J = { ITEM = ITEM }
 
 -- The main story, in the order it is usually played.
 J.story = {
-  { id = "starter", done = flag("FLAG_SYS_POKEMON_GET") },
-  { id = "parcel", done = flag("FLAG_SYS_POKEDEX_GET") },
-  { id = "brock", done = flag("FLAG_BADGE01_GET") },
-  { id = "cerulean", done = any({ flag("FLAG_WORLD_MAP_CERULEAN_CITY"), flag("FLAG_BADGE02_GET") }) },
-  { id = "misty", done = flag("FLAG_BADGE02_GET") },
-  { id = "bill", done = any({ flag("FLAG_GOT_SS_TICKET"), item(ITEM.SS_TICKET) }) },
-  { id = "ssanne", done = flag("FLAG_GOT_HM01") },
-  { id = "surge", done = flag("FLAG_BADGE03_GET") },
-  { id = "lavender", done = flag("FLAG_WORLD_MAP_LAVENDER_TOWN") },
-  { id = "celadon", done = flag("FLAG_WORLD_MAP_CELADON_CITY") },
-  { id = "erika", done = flag("FLAG_BADGE04_GET") },
-  { id = "hideout", done = any({ item(ITEM.SILPH_SCOPE), flag("FLAG_RESCUED_MR_FUJI") }) },
-  { id = "tower", done = flag("FLAG_RESCUED_MR_FUJI") },
-  { id = "flute", done = flag("FLAG_GOT_POKE_FLUTE") },
-  { id = "fuchsia", done = flag("FLAG_WORLD_MAP_FUCHSIA_CITY") },
-  { id = "koga", done = flag("FLAG_BADGE05_GET") },
-  { id = "surf", done = flag("FLAG_GOT_HM03") },
-  { id = "strength", done = flag("FLAG_GOT_HM04") },
-  { id = "saffron", done = any({ flag("FLAG_WORLD_MAP_SAFFRON_CITY"), flag("FLAG_BADGE06_GET") }) },
-  { id = "silph", done = any({ flag("FLAG_HIDE_SAFFRON_ROCKETS"), flag("FLAG_BADGE06_GET") }) },
-  { id = "sabrina", done = flag("FLAG_BADGE06_GET") },
-  { id = "cinnabar", done = any({ flag("FLAG_WORLD_MAP_CINNABAR_ISLAND"), flag("FLAG_BADGE07_GET") }) },
-  { id = "mansion", done = any({ item(ITEM.SECRET_KEY), flag("FLAG_BADGE07_GET") }) },
-  { id = "blaine", done = flag("FLAG_BADGE07_GET") },
-  { id = "sevii", optional = true, done = flag("FLAG_SEVII_DETOUR_FINISHED"), open = flag("FLAG_BADGE07_GET") },
-  { id = "giovanni", done = flag("FLAG_BADGE08_GET") },
-  { id = "league", done = any({ flag("FLAG_WORLD_MAP_INDIGO_PLATEAU_EXTERIOR"), GAME_CLEAR }) },
-  { id = "elite", done = GAME_CLEAR,
+  { id = "starter", go = { { map = "FR_ROUTE_1" } }, done = flag("FLAG_SYS_POKEMON_GET") },
+  { id = "parcel", go = { { map = "FR_OAKS_LAB", x = 6, y = 3, when = item(ITEM.OAKS_PARCEL) }, { map = "FR_VIRIDIAN_CITY_MART", x = 2, y = 3 } }, done = flag("FLAG_SYS_POKEDEX_GET") },
+  { id = "brock", go = { { map = "FR_PEWTER_CITY_GYM", x = 6, y = 5 } }, done = flag("FLAG_BADGE01_GET") },
+  { id = "cerulean", go = { { map = "FR_CERULEAN_CITY" } }, done = any({ flag("FLAG_WORLD_MAP_CERULEAN_CITY"), flag("FLAG_BADGE02_GET") }) },
+  { id = "misty", go = { { map = "FR_CERULEAN_CITY_GYM", x = 8, y = 6 } }, done = flag("FLAG_BADGE02_GET") },
+  { id = "bill", go = { { map = "FR_ROUTE_25_SEA_COTTAGE", x = 7, y = 5 } }, done = any({ flag("FLAG_GOT_SS_TICKET"), item(ITEM.SS_TICKET) }) },
+  { id = "ssanne", go = { { map = "FR_SSANNE_CAPTAINS_OFFICE", x = 5, y = 4 } }, done = flag("FLAG_GOT_HM01") },
+  { id = "surge", go = { { map = "FR_VERMILION_CITY_GYM", x = 5, y = 2 } }, done = flag("FLAG_BADGE03_GET") },
+  { id = "lavender", go = { { map = "FR_LAVENDER_TOWN" } }, done = flag("FLAG_WORLD_MAP_LAVENDER_TOWN") },
+  { id = "celadon", go = { { map = "FR_CELADON_CITY" } }, done = flag("FLAG_WORLD_MAP_CELADON_CITY") },
+  { id = "erika", go = { { map = "FR_CELADON_CITY_GYM", x = 6, y = 4 } }, done = flag("FLAG_BADGE04_GET") },
+  { id = "hideout", go = { { map = "FR_ROCKET_HIDEOUT_B4F", when = flag("FLAG_OPENED_ROCKET_HIDEOUT") }, { map = "FR_CELADON_CITY_GAME_CORNER", x = 11, y = 1 } }, done = any({ item(ITEM.SILPH_SCOPE), flag("FLAG_RESCUED_MR_FUJI") }) },
+  { id = "tower", go = { { map = "FR_POKEMON_TOWER_7F", x = 11, y = 4 } }, done = flag("FLAG_RESCUED_MR_FUJI") },
+  { id = "flute", go = { { map = "FR_LAVENDER_TOWN_VOLUNTEER_POKEMON_HOUSE", x = 3, y = 3 } }, done = flag("FLAG_GOT_POKE_FLUTE") },
+  { id = "fuchsia", go = { { map = "FR_FUCHSIA_CITY" } }, done = flag("FLAG_WORLD_MAP_FUCHSIA_CITY") },
+  { id = "koga", go = { { map = "FR_FUCHSIA_CITY_GYM", x = 7, y = 13 } }, done = flag("FLAG_BADGE05_GET") },
+  { id = "surf", go = { { map = "FR_SAFARI_ZONE_SECRET_HOUSE", x = 6, y = 5 } }, done = flag("FLAG_GOT_HM03") },
+  { id = "strength", go = { { map = "FR_FUCHSIA_CITY_WARDENS_HOUSE", x = 3, y = 5, when = item(ITEM.GOLD_TEETH) }, { map = "FR_SAFARI_ZONE_WEST" } }, done = flag("FLAG_GOT_HM04") },
+  { id = "saffron", go = { { map = "FR_SAFFRON_CITY", when = flag("FLAG_GOT_TEA") }, { map = "FR_CELADON_CITY_CONDOMINIUMS_1F", x = 2, y = 9 } }, done = any({ flag("FLAG_WORLD_MAP_SAFFRON_CITY"), flag("FLAG_BADGE06_GET") }) },
+  { id = "silph", go = { { map = "FR_SILPH_CO_11F", when = item(ITEM.CARD_KEY) }, { map = "FR_SILPH_CO_5F" } }, done = any({ flag("FLAG_HIDE_SAFFRON_ROCKETS"), flag("FLAG_BADGE06_GET") }) },
+  { id = "sabrina", go = { { map = "FR_SAFFRON_CITY_GYM", x = 14, y = 11 } }, done = flag("FLAG_BADGE06_GET") },
+  { id = "cinnabar", go = { { map = "FR_CINNABAR_ISLAND" } }, done = any({ flag("FLAG_WORLD_MAP_CINNABAR_ISLAND"), flag("FLAG_BADGE07_GET") }) },
+  { id = "mansion", go = { { map = "FR_POKEMON_MANSION_B1F" } }, done = any({ item(ITEM.SECRET_KEY), flag("FLAG_BADGE07_GET") }) },
+  { id = "blaine", go = { { map = "FR_CINNABAR_ISLAND_GYM", x = 5, y = 4 } }, done = flag("FLAG_BADGE07_GET") },
+  { id = "sevii", go = { { map = "FR_CINNABAR_ISLAND_POKEMON_CENTER_1F", x = 11, y = 5 } }, optional = true, done = flag("FLAG_SEVII_DETOUR_FINISHED"), open = flag("FLAG_BADGE07_GET") },
+  { id = "giovanni", go = { { map = "FR_VIRIDIAN_CITY_GYM", x = 2, y = 2 } }, done = flag("FLAG_BADGE08_GET") },
+  { id = "league", go = { { map = "FR_INDIGO_PLATEAU_EXTERIOR" } }, done = any({ flag("FLAG_WORLD_MAP_INDIGO_PLATEAU_EXTERIOR"), GAME_CLEAR }) },
+  { id = "elite", go = {
+    { map = "FR_POKEMON_LEAGUE_CHAMPIONS_ROOM", x = 6, y = 8, when = flag("FLAG_DEFEATED_LANCE") },
+    { map = "FR_POKEMON_LEAGUE_LANCES_ROOM", x = 6, y = 8, when = flag("FLAG_DEFEATED_AGATHA") },
+    { map = "FR_POKEMON_LEAGUE_AGATHAS_ROOM", x = 6, y = 5, when = flag("FLAG_DEFEATED_BRUNO") },
+    { map = "FR_POKEMON_LEAGUE_BRUNOS_ROOM", x = 6, y = 5, when = flag("FLAG_DEFEATED_LORELEI") },
+    { map = "FR_POKEMON_LEAGUE_LORELEIS_ROOM", x = 6, y = 5 } }, done = GAME_CLEAR,
     parts = { "FLAG_DEFEATED_LORELEI", "FLAG_DEFEATED_BRUNO", "FLAG_DEFEATED_AGATHA", "FLAG_DEFEATED_LANCE" } },
 }
 
 -- After the Hall of Fame. The legendary birds can be met earlier; they are
 -- listed here as optional.
 J.post = {
-  { id = "natdex", done = flag("FLAG_SYS_NATIONAL_DEX"), open = GAME_CLEAR, need = 60 },
-  { id = "ruby", done = any({ flag("FLAG_GOT_RUBY"), flag("FLAG_SYS_SEVII_MAP_4567") }) },
-  { id = "rainbow", done = flag("FLAG_SYS_SEVII_MAP_4567") },
-  { id = "sapphire", done = any({ flag("FLAG_RECOVERED_SAPPHIRE"), flag("FLAG_HIDE_CERULEAN_CAVE_GUARD") }) },
-  { id = "network", done = flag("FLAG_HIDE_CERULEAN_CAVE_GUARD") },
-  { id = "mewtwo", done = flag("FLAG_FOUGHT_MEWTWO") },
-  { id = "articuno", optional = true, done = flag("FLAG_FOUGHT_ARTICUNO"), open = all({ flag("FLAG_GOT_HM03"), flag("FLAG_GOT_HM04") }) },
-  { id = "zapdos", optional = true, done = flag("FLAG_FOUGHT_ZAPDOS"), open = flag("FLAG_GOT_HM03") },
-  { id = "moltres", optional = true, done = flag("FLAG_FOUGHT_MOLTRES"), open = flag("FLAG_GOT_HM06") },
+  { id = "natdex", go = { { map = "FR_OAKS_LAB", x = 6, y = 3, when = caught(60) } }, done = flag("FLAG_SYS_NATIONAL_DEX"), open = GAME_CLEAR, need = 60 },
+  { id = "ruby", go = { { map = "FR_MT_EMBER_RUBY_PATH_B5F", x = 7, y = 7 } }, done = any({ flag("FLAG_GOT_RUBY"), flag("FLAG_SYS_SEVII_MAP_4567") }) },
+  { id = "rainbow", go = { { map = "SEVII_ONE_ISLAND_POKECENTER", x = 15, y = 6 } }, done = flag("FLAG_SYS_SEVII_MAP_4567") },
+  { id = "sapphire", go = { { map = "FR_FIVE_ISLAND_ROCKET_WAREHOUSE", x = 27, y = 4, when = flag("FLAG_WORLD_MAP_SIX_ISLAND_DOTTED_HOLE_1F") }, { map = "FR_SIX_ISLAND_DOTTED_HOLE_SAPPHIRE_ROOM" } }, done = any({ flag("FLAG_RECOVERED_SAPPHIRE"), flag("FLAG_HIDE_CERULEAN_CAVE_GUARD") }) },
+  { id = "network", go = { { map = "SEVII_ONE_ISLAND_POKECENTER", x = 15, y = 6 } }, done = flag("FLAG_HIDE_CERULEAN_CAVE_GUARD") },
+  { id = "mewtwo", go = { { map = "FR_CERULEAN_CAVE_B1F", x = 7, y = 12 } }, done = flag("FLAG_FOUGHT_MEWTWO") },
+  { id = "articuno", go = { { map = "FR_SEAFOAM_ISLANDS_B4F", x = 9, y = 2 } }, optional = true, done = flag("FLAG_FOUGHT_ARTICUNO"), open = all({ flag("FLAG_GOT_HM03"), flag("FLAG_GOT_HM04") }) },
+  { id = "zapdos", go = { { map = "FR_POWER_PLANT", x = 5, y = 11 } }, optional = true, done = flag("FLAG_FOUGHT_ZAPDOS"), open = flag("FLAG_GOT_HM03") },
+  { id = "moltres", go = { { map = "FR_MT_EMBER_SUMMIT", x = 9, y = 6 } }, optional = true, done = flag("FLAG_FOUGHT_MOLTRES"), open = flag("FLAG_GOT_HM06") },
 }
 
 -- HMs and key items: where they are and from when. `hm` is the HM number,

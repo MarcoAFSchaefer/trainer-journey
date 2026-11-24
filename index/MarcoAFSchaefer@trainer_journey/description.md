@@ -8,6 +8,7 @@ A journey guide for FireRed and LeafGreen that reads your save and tells you whe
 - **Obstacles**: what blocks the way and what is still missing for each.
 - **Post-game**: National Pokédex, Celio's network, Mewtwo and the legendary birds.
 - **Pokédex rewards** from Professor Oak's aides.
+- **An arrow on the game screen** points the way to the objective: the door, the edge of the map or the person to talk to, with the number of steps. It follows the real connections between maps.
 - **Spoiler-free by default**: upcoming steps stay hidden until you switch them on.
 
 The panels live in **Trainer Desk**, so that mod is needed to see them. English, Spanish, Portuguese and Japanese.

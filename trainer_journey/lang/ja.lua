@@ -141,4 +141,7 @@ return {
   JOURNEY_PROGRESS = "たび：%d／%d ステップ",
   READY_NOW = "ついでにできること",
   AND_MORE = "ほか %d こは「たびのきろく」パネルに",
+  SHOW_ARROW = "画面に矢印",
+  ARROW_STEPS = "%d 歩",
+  ARROW_FERRY = "シーギャロップ号に乗ろう",
 }

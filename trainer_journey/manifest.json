@@ -1,7 +1,7 @@
 {
   "id": "trainer_journey",
   "name": "Trainer Journey",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "api": 3,
   "entry": "main.lua",
   "category": "UI",
@@ -20,6 +20,6 @@
   "permissions": [
     "engine_internals"
   ],
-  "description": "A journey guide for FireRed and LeafGreen that reads your save and tells you where to go next: the story step by step, where to find every HM and key item, what blocks the way and what you still need for it, the post-game, and the Pokedex rewards from Professor Oak's aides. Upcoming steps stay hidden until you choose to see them. Its panels live in the Trainer Desk window. English, Spanish, Portuguese and Japanese.",
+  "description": "A journey guide for FireRed and LeafGreen that reads your save and tells you where to go next: the story step by step, where to find every HM and key item, what blocks the way and what you still need for it, the post-game, and the Pokedex rewards from Professor Oak's aides. Upcoming steps stay hidden until you choose to see them. An arrow at the border of the game screen points the way to the objective, map by map. Its panels live in the Trainer Desk window. English, Spanish, Portuguese and Japanese.",
   "github": "MarcoAFSchaefer/trainer-journey"
 }
