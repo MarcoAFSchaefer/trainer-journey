@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="-6 -6 112 112"><g transform="translate(0 0) scale(1.0)">
+<defs><linearGradient id="fjourney" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd2ad"/><stop offset=".5" stop-color="#f47b2a"/><stop offset="1" stop-color="#a03c06"/></linearGradient>
+<linearGradient id="rjourney" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#c9d2de"/><stop offset="1" stop-color="#77828f"/></linearGradient></defs>
+<g transform="translate(0 3)" fill="#000" opacity=".35"><path d="M50 4L62 38L96 50L62 62L50 96L38 62L4 50L38 38z"/></g>
+<g fill="url(#fjourney)" stroke="url(#rjourney)" stroke-width="5" stroke-linejoin="round"><path d="M50 4L62 38L96 50L62 62L50 96L38 62L4 50L38 38z"/></g>
+<g fill="#fff" opacity=".28"><path d="M50 4L62 38L50 50z M96 50L62 62L50 50z M50 96L38 62L50 50z M4 50L38 38L50 50z"/></g><g fill="#000" opacity=".3"><path d="M50 4L38 38L50 50z M96 50L62 38L50 50z M50 96L62 62L50 50z M4 50L38 62L50 50z" opacity=".5"/></g>
+<g fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1.2" stroke-linejoin="round"><path d="M50 4V96M4 50H96M38 38L62 62M62 38L38 62"/></g>
+<ellipse cx="47" cy="27" rx="4" ry="1.8" fill="#fff" opacity=".6" transform="rotate(-28 47 27)"/></g></svg>

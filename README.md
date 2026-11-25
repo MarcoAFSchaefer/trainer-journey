@@ -1,3 +1,5 @@
+![Trainer Journey: the Journey Badge of the Trainer Badges](docs/brand/banner.png)
+
 # Trainer Journey
 
 A journey guide for Pokémon FireRed/LeafGreen on Gen1Recomp (mod API 3). It reads your save (event flags, badges, bag, Pokédex and party) and tells you what to do next. Nothing in the game is changed.
@@ -59,6 +61,21 @@ The panels are in English, Spanish, Portuguese and Japanese. Place and item name
 - Story steps are listed in the usual order; doing things in another order is fine, and the next step is always the first one not done.
 - The arrow plans by the links between maps, not by the tiles: it knows which door or edge leads on, but not obstacles inside a map (a ledge, a tree to cut, a puzzle). Some objectives (the Safari Zone area with the Gold Teeth, Silph Co. floors, the Pokémon Mansion) point to the map, not to the exact spot.
 - Ruby, Sapphire and Emerald are not covered.
+
+## The Trainer Badges
+
+Six mods for FireRed and LeafGreen that work on their own and better together. Each one is a badge in the same case.
+
+![The six Trainer Badges: Desk, Lens, Pilot, Journey, Controls and Tactics](docs/brand/case.png)
+
+| | Mod | What it does |
+| --- | --- | --- |
+| <img src="https://raw.githubusercontent.com/MarcoAFSchaefer/trainer-desk/main/docs/brand/badge.png" width="40" alt=""> | [Trainer Desk](https://github.com/MarcoAFSchaefer/trainer-desk) | Docks and tabs around the game. |
+| <img src="https://raw.githubusercontent.com/MarcoAFSchaefer/trainer-lens/main/docs/brand/badge.png" width="40" alt=""> | [Trainer Lens](https://github.com/MarcoAFSchaefer/trainer-lens) | Everything the game knows, on screen. |
+| <img src="https://raw.githubusercontent.com/MarcoAFSchaefer/trainer-pilot/main/docs/brand/badge.png" width="40" alt=""> | [Trainer Pilot](https://github.com/MarcoAFSchaefer/trainer-pilot) | Trains and hunts while you are away. |
+| <img src="https://raw.githubusercontent.com/MarcoAFSchaefer/trainer-journey/main/docs/brand/badge.png" width="40" alt=""> | **Trainer Journey** (this mod) | Where to go next, without spoilers. |
+| <img src="https://raw.githubusercontent.com/MarcoAFSchaefer/trainer-controls/main/docs/brand/badge.png" width="40" alt=""> | [Trainer Controls](https://github.com/MarcoAFSchaefer/trainer-controls) | Every button, where you want it. |
+| <img src="https://raw.githubusercontent.com/MarcoAFSchaefer/trainer-tactics/main/docs/brand/badge.png" width="40" alt=""> | [Trainer Tactics](https://github.com/MarcoAFSchaefer/trainer-tactics) | The best play, with the numbers. |
 
 ## What it changes in the game
 
