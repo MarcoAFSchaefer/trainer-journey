@@ -2,6 +2,8 @@
 
 A journey guide for Pokémon FireRed/LeafGreen on Gen1Recomp (mod API 3). It reads your save (event flags, badges, bag, Pokédex and party) and tells you what to do next. Nothing in the game is changed.
 
+![Trainer Journey: the story list, the next step and the arrow pointing the way on Route 1](docs/images/journey.png)
+
 ## What it does
 
 - **Next step panel:** the current objective with where to go and how, your badges and kinds caught, how far along the journey you are, and what you can do on the way: Pokédex gifts waiting for you, items you can pick up now, HMs nobody in the party knows yet, side trips.
@@ -57,6 +59,10 @@ The panels are in English, Spanish, Portuguese and Japanese. Place and item name
 - Story steps are listed in the usual order; doing things in another order is fine, and the next step is always the first one not done.
 - The arrow plans by the links between maps, not by the tiles: it knows which door or edge leads on, but not obstacles inside a map (a ledge, a tree to cut, a puzzle). Some objectives (the Safari Zone area with the Gold Teeth, Silph Co. floors, the Pokémon Mansion) point to the map, not to the exact spot.
 - Ruby, Sapphire and Emerald are not covered.
+
+## What it changes in the game
+
+[DIFFERENCES.md](DIFFERENCES.md) lists everything this mod does differently from the unmodded game.
 
 ## License
 
