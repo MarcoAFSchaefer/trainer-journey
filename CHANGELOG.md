@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.0
+
+- Both panels carry the Journey Badge on their tabs in Trainer Desk (0.8.0 or newer; older versions just show the title).
+- The mod is now part of the **Trainer Badges**: a badge, a banner and the family case in the README.
+
 ## 0.3.2
 
 - Inside Professor Oak's lab, before you have a Pokémon, the arrow points at the Poké Balls on the table instead of at the way out.

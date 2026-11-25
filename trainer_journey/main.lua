@@ -408,9 +408,57 @@ return function(mod)
         return draw(clock, w, h)
       end
     end
-    api.register({ id = "trainer_journey.next", title = T("TITLE_NEXT"), width = Panel.NW, height = Panel.NH, pixel = 1,
+    api.register({
+      icon = (function()
+        -- The Journey Badge, this mod's mark in the Trainer Badges family: drawn
+        -- here, on a 100-unit square, so no picture file is needed.
+        local G = love.graphics
+        local SHAPE, LIGHT, DARK = { 50,4, 62,38, 96,50, 62,62, 50,96, 38,62, 4,50, 38,38 }, { 50,4, 62,38, 50,50, 38,38 }, { 50,96, 62,62, 50,50, 38,62 }
+        local function fillAt(pts, x, y, k, f)
+          local t = {}
+          for i = 1, #pts, 2 do
+            t[i], t[i + 1] = x + (50 + (pts[i] - 50) * f) * k, y + (50 + (pts[i + 1] - 50) * f) * k
+          end
+          local ok, tris = pcall(love.math.triangulate, t)
+          if ok then for _, tri in ipairs(tris) do G.polygon("fill", tri) end end
+        end
+        return function(x, y, size, alpha)
+          local k, a = size / 100, alpha or 1
+          local r, g, b, a0 = G.getColor()
+          G.setColor(0.85, 0.88, 0.92, a); fillAt(SHAPE, x, y, k, 1)
+          G.setColor(0.96, 0.48, 0.16, a); fillAt(SHAPE, x, y, k, 0.8)
+          G.setColor(1, 1, 1, 0.3 * a); fillAt(LIGHT, x, y, k, 0.8)
+          G.setColor(0, 0, 0, 0.28 * a); fillAt(DARK, x, y, k, 0.8)
+          G.setColor(r, g, b, a0)
+        end
+      end)(),
+      id = "trainer_journey.next", title = T("TITLE_NEXT"), width = Panel.NW, height = Panel.NH, pixel = 1,
       responsive = true, interval = 0.25, side = "right", draw = themed(Panel.drawNext) })
-    api.register({ id = "trainer_journey.journey", title = T("TITLE_JOURNEY"), width = Panel.W, height = Panel.H, pixel = 1,
+    api.register({
+      icon = (function()
+        -- The Journey Badge, this mod's mark in the Trainer Badges family: drawn
+        -- here, on a 100-unit square, so no picture file is needed.
+        local G = love.graphics
+        local SHAPE, LIGHT, DARK = { 50,4, 62,38, 96,50, 62,62, 50,96, 38,62, 4,50, 38,38 }, { 50,4, 62,38, 50,50, 38,38 }, { 50,96, 62,62, 50,50, 38,62 }
+        local function fillAt(pts, x, y, k, f)
+          local t = {}
+          for i = 1, #pts, 2 do
+            t[i], t[i + 1] = x + (50 + (pts[i] - 50) * f) * k, y + (50 + (pts[i + 1] - 50) * f) * k
+          end
+          local ok, tris = pcall(love.math.triangulate, t)
+          if ok then for _, tri in ipairs(tris) do G.polygon("fill", tri) end end
+        end
+        return function(x, y, size, alpha)
+          local k, a = size / 100, alpha or 1
+          local r, g, b, a0 = G.getColor()
+          G.setColor(0.85, 0.88, 0.92, a); fillAt(SHAPE, x, y, k, 1)
+          G.setColor(0.96, 0.48, 0.16, a); fillAt(SHAPE, x, y, k, 0.8)
+          G.setColor(1, 1, 1, 0.3 * a); fillAt(LIGHT, x, y, k, 0.8)
+          G.setColor(0, 0, 0, 0.28 * a); fillAt(DARK, x, y, k, 0.8)
+          G.setColor(r, g, b, a0)
+        end
+      end)(),
+      id = "trainer_journey.journey", title = T("TITLE_JOURNEY"), width = Panel.W, height = Panel.H, pixel = 1,
       responsive = true, interval = 0.25, side = "bottom", pointer = Panel.pointer, draw = themed(Panel.drawJourney) })
     docked = { api = api, language = language }
   end
