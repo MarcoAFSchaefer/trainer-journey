@@ -142,6 +142,10 @@ return function(mod)
     if c.item then return r.item(c.item) end
     if c.badges then return r.badges >= c.badges end
     if c.caught then return r.caught >= c.caught end
+    if c.on then
+      local ok, Map = pcall(require, "src.core.game3.map")
+      return ok and type(Map) == "table" and Map.current == c.on
+    end
     if c.any then
       for _, part in ipairs(c.any) do if met(part, r) then return true end end
       return false

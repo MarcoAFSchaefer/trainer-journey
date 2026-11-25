@@ -6,6 +6,7 @@
 --   item(id)        a key item in the bag (FRLG item ids)
 --   badges(n)       at least n badges
 --   caught(n)       at least n kinds of Pokémon caught (Kanto Pokédex)
+--   on(map)         the player is on that map right now
 --   any{...}, all{...}
 -- `go` (story, post-game, items and Pokédex gifts) is where the on-screen arrow leads: a list of
 -- { map, x, y, when }, the first whose `when` holds (or has none) wins; x/y
@@ -17,6 +18,7 @@ local function flag(name) return { flag = name } end
 local function item(id) return { item = id } end
 local function badges(n) return { badges = n } end
 local function caught(n) return { caught = n } end
+local function on(map) return { on = map } end
 local function any(list) return { any = list } end
 local function all(list) return { all = list } end
 
@@ -31,7 +33,7 @@ local J = { ITEM = ITEM }
 
 -- The main story, in the order it is usually played.
 J.story = {
-  { id = "starter", go = { { map = "FR_ROUTE_1" } }, done = flag("FLAG_SYS_POKEMON_GET") },
+  { id = "starter", go = { { map = "FR_OAKS_LAB", x = 9, y = 4, when = on("FR_OAKS_LAB") }, { map = "FR_ROUTE_1" } }, done = flag("FLAG_SYS_POKEMON_GET") },
   { id = "parcel", go = { { map = "FR_OAKS_LAB", x = 6, y = 3, when = item(ITEM.OAKS_PARCEL) }, { map = "FR_VIRIDIAN_CITY_MART", x = 2, y = 3 } }, done = flag("FLAG_SYS_POKEDEX_GET") },
   { id = "brock", go = { { map = "FR_PEWTER_CITY_GYM", x = 6, y = 5 } }, done = flag("FLAG_BADGE01_GET") },
   { id = "cerulean", go = { { map = "FR_CERULEAN_CITY" } }, done = any({ flag("FLAG_WORLD_MAP_CERULEAN_CITY"), flag("FLAG_BADGE02_GET") }) },

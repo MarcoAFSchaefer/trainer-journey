@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.2
+
+- Inside Professor Oak's lab, before you have a Pokémon, the arrow points at the Poké Balls on the table instead of at the way out.
+
 ## 0.3.1
 
 - The arrow is not worked out or drawn while Trainer Pilot's bot is running.
