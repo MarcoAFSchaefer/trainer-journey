@@ -45,34 +45,6 @@ return function(mod)
   -- Reading the save
   ---------------------------------------------------------------------------
   local game
-  -- Spoilers: hidden unless the player chose to see upcoming steps.
-  local settings = { spoilers = false }
-  do
-    local saved = mod.cache and mod.cache.read and mod.cache:read("spoilers")
-    settings.spoilers = saved == "1"
-  end
-  -- The arrow: the mod option sets it, the panel's switch changes it until the
-  -- option itself is changed again.
-  local function arrowOption() return option("arrow") ~= false end
-  do
-    local saved = mod.cache and mod.cache.read and mod.cache:read("arrow")
-    local on, from = tostring(saved or ""):match("^([01]),([01])$")
-    local now = arrowOption() and "1" or "0"
-    settings.arrow = (on and from == now) and on == "1" or arrowOption()
-  end
-  local function setArrow(on)
-    settings.arrow = on and true or false
-    if mod.cache and mod.cache.write then
-      mod.cache:write("arrow", (settings.arrow and "1" or "0") .. "," .. (arrowOption() and "1" or "0"))
-    end
-  end
-  local lastOption = arrowOption()
-  local function syncArrowOption()
-    local now = arrowOption()
-    if now ~= lastOption then lastOption = now; setArrow(now) end
-  end
-  -- A goal of the player's own choosing ("items:hm3"): the arrow and the Next
-  -- step panel follow it until it is done or let go.
   -- What belongs to one save. The game keeps a store for mods per save slot
   -- (mod.storage); the shared cache (mod.cache) is the same for every save and
   -- for every copy of the game that is open. A save that has nothing of its own
@@ -116,6 +88,32 @@ return function(mod)
     PerSave.values[key], PerSave.dirty = text, true
     if soon then perSaveFlush() end
   end
+  -- Spoilers: hidden unless the player chose to see upcoming steps.
+  local settings = { spoilers = false }
+  local function loadSpoilers() settings.spoilers = perSaveRead("spoilers") == "1" end
+  loadSpoilers()
+  PerSave.listeners[#PerSave.listeners + 1] = loadSpoilers
+  -- The arrow: the mod option sets it, the panel's switch changes it until the
+  -- option itself is changed again.
+  local function arrowOption() return option("arrow") ~= false end
+  local function loadArrow()
+    local on, from = tostring(perSaveRead("arrow") or ""):match("^([01]),([01])$")
+    local now = arrowOption() and "1" or "0"
+    if on and from == now then settings.arrow = on == "1" else settings.arrow = arrowOption() end
+  end
+  loadArrow()
+  PerSave.listeners[#PerSave.listeners + 1] = loadArrow
+  local function setArrow(on)
+    settings.arrow = on and true or false
+    perSaveWrite("arrow", (settings.arrow and "1" or "0") .. "," .. (arrowOption() and "1" or "0"), true)
+  end
+  local lastOption = arrowOption()
+  local function syncArrowOption()
+    local now = arrowOption()
+    if now ~= lastOption then lastOption = now; setArrow(now) end
+  end
+  -- A goal of the player's own choosing ("items:hm3"): the arrow and the Next
+  -- step panel follow it until it is done or let go.
   local function loadPin()
     local saved = perSaveRead("pin")
     settings.pin = type(saved) == "string" and saved:match("^%a+:[%w_]+$") or nil
@@ -128,7 +126,7 @@ return function(mod)
   end
   local function setSpoilers(on)
     settings.spoilers = on and true or false
-    if mod.cache and mod.cache.write then mod.cache:write("spoilers", settings.spoilers and "1" or "0") end
+    perSaveWrite("spoilers", settings.spoilers and "1" or "0", true)
   end
 
   local function supported(session)
