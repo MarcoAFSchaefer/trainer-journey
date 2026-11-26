@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.0
+
+- The goal you pin now belongs to the save that is open, kept in the game's per-save store for mods; it used to be one for every save. A save with no pin of its own yet starts from the one there was. The spoiler and arrow settings are still shared.
+
 ## 0.4.0
 
 - Both panels carry the Journey Badge on their tabs in Trainer Desk (0.8.0 or newer; older versions just show the title).
